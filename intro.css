@@ -23,10 +23,12 @@ footer {
  * Off Canvas
  * --------------------------------------------------
  */
- 
- table{
- background-color:#eee;
- }
+.agregar {color:#eee;
+background:#428bca;
+padding: 5px 38px;
+border-radius: 5px;}
+
+
  button{
 position:relative;
  top:300px;
