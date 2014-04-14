@@ -11,14 +11,49 @@ import java.util.Date;
 import java.util.concurrent.Executor; 
 import java.util.concurrent.Executors; 
 
+
+
+
+
+
 public class JavaWebServer
 {   
 	private static final int fNumberOfThreads = 100;	//para que el  servidor pueda tener varios clientes
 	private static final Executor fThreadPool = Executors.newFixedThreadPool(fNumberOfThreads);//para ejecutar hebras   
 	
+	
+	
+	static String direccion;
+	static String parametro;
+ 
+    
+    public static void identificar(String direct) {
+            	  
+    	    
+        String[] splitPath = direct.split("\\?");
+        
+        if(splitPath.length > 1) {
+            parametro = splitPath[1];
+        }
+        
+        
+        if(splitPath[0].equals("/")) {
+        	direccion = "/src/bootstrap-3.0.0/examples/redes tarea/pagredes2.html" ;
+        }
+        else {
+            direccion = "/src/bootstrap-3.0.0/examples/redes tarea" + direct;
+        }
+    
+    }
+    
+	
+	
+	
+	
+	
 	public static void main(String[] args) throws IOException 
 	{ 
-		ServerSocket socket = new ServerSocket(8082); // se crea socket en puerto designado
+		ServerSocket socket = new ServerSocket(81); // se crea socket en puerto designado
 		
 		while (true) 
 		{
@@ -43,11 +78,14 @@ public class JavaWebServer
 		try 
 		{ 
 			
-			while(true)
-			{
-			String DireccionServidor = sockete.getInetAddress().toString();;
+			in = new BufferedReader(new InputStreamReader(sockete.getInputStream())); 
+			String DireccionServidor = sockete.getInetAddress().toString();
 			System.out.println("New Connection:" + DireccionServidor);
 			in = new BufferedReader(new InputStreamReader(sockete.getInputStream())); 
+			
+			
+			while(true)
+			{
 			
 			
 			request = in.readLine(); 
@@ -62,51 +100,81 @@ public class JavaWebServer
 			
 	
 
-		        
-                File file = new File(System.getProperty("user.dir") + "/src/bootstrap-3.0.0/examples/redes tarea/pagredes.html"  );
-                BufferedReader br = new BufferedReader(new FileReader(file));
+		
                 
-                FileInputStream fis = new FileInputStream(file);
-                
-                out.println("Content-length: " + file.length());
-                out.println("");
-                
-                
-                
-                
-        		int pesoArchivo = (int) file.length();
-                
-    			
+			String[] splitted = request.split("\\s+");
+	             
+	        identificar(splitted[1]);
         		
 		        
-                if(request.startsWith("POST") ){
+            if(request.startsWith("POST") ){
                   
                      System.out.println("hola");  
+                     
+                    
+       	             File file = new File(System.getProperty("user.dir") + direccion );
+       	             BufferedReader br = new BufferedReader(new FileReader(file));
+       	             
+       	             FileInputStream fis = new FileInputStream(file);
+       	             
+       	             out.println("Content-length: " + file.length());
+       	             out.println("");
+       	             
+       	             
+       	             
+       	             
+       	            	 //int pesoArchivo = (int) file.length();
+       	                
+       	             byte[] buffer = new byte[(int)file.length()];
+       	             
+       	             for(int i=0;i<file.length();i++)
+       	             {
+       	            	 buffer[i] = (byte)fis.read();
+       	             }
+                     
                      
                  }
  			
                 
-   	         if(request.startsWith("GET") ){
+   	        if(request.startsWith("GET") ){
 
    	            
    	                
    	             System.out.println("HTTP/1.0 200 OK");
    	             System.out.println("Server: Java HTTP Server 1.0");
    	             System.out.println("Date: " + new Date());
-   	             System.out.println("Content-length: " + pesoArchivo);
+   	          //   System.out.println("Content-length: " + pesoArchivo);
    	             System.out.println("\n");
+   	             
+   	             
+   	             
+   	            
+   	             
+   	             File file = new File(System.getProperty("user.dir") + direccion );
+   	             BufferedReader br = new BufferedReader(new FileReader(file));
+   	             
+   	             FileInputStream fis = new FileInputStream(file);
+   	             
+   	             out.println("Content-length: " + file.length());
+   	             out.println("");
+   	             
+   	             
+   	             
+   	             
+   	            	 //int pesoArchivo = (int) file.length();
    	                
-   	         }
-                
-                
-                byte[] buffer = new byte[(int)file.length()];
-                for(int i=0;i<file.length();i++) {
-                    buffer[i] = (byte)fis.read();
-                }
-                sockete.getOutputStream().write(buffer);
-                
-            
-		        
+   	             byte[] buffer = new byte[(int)file.length()];
+   	             
+   	             for(int i=0;i<file.length();i++)
+   	             {
+   	            	 buffer[i] = (byte)fis.read();
+   	             }
+   	             
+   	             sockete.getOutputStream().write(buffer);
+   	             }
+   	           
+   	             
+
 
 			
 			
